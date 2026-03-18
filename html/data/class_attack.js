@@ -17,9 +17,10 @@ class Attack{
 //remplit all_attacks avec toutes les attaques dans fast_moves et charged_moves
 function fill_attacks(){
     for (let move of fast_moves.concat(charged_moves)){
-        attack = new Attack(move.id, move.name, move.type, move.power, move.duration);
+        let attack = new Attack(move.id, move.name, move.type, move.power, move.duration);
         Attack.all_attacks[move.id] = attack;
     }
 }
+fill_attacks();
 let Charge = new Attack(12, "Tackle", "Normal", 5, 50);   
-console.log(Charge.toString());
+console.log(Attack.all_attacks[221].toString());
