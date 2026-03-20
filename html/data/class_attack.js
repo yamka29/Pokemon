@@ -23,6 +23,8 @@ function fill_attacks(){
     }
 }
 
+
+// TEST
 fill_attacks();
 let Charge = new Attack(12, "Tackle", "Normal", 5, 50);
 console.table(fast_moves);
