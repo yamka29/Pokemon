@@ -47,7 +47,14 @@
         toString(){
             return `${this.name} : #${this.id_pokemon}, ${this.types}, [STA: ${this.stat_stamina}, ATK: ${this.stat_attack}, DEF: ${this.stat_defense}], Rapides = ${this.fast_attacks}, Chargées = ${this.charged_attacks}`;
         }
+
+
     }
+
+//remplit all_pokemons avec tout les Pokemons indexées par leur id et leur forme
+function fill_pokemons(){
+    
+}
 
 // TEST
 let Bulbizarre = new Pokemon(1, "Bulbasaur", 5, 10, 17, "Normal");

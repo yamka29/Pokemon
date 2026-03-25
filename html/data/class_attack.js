@@ -15,7 +15,7 @@ class Attack{
 
 }
 
-//remplit all_attacks avec toutes les attaques dans fast_moves et charged_moves
+//remplit all_attacks avec toutes les attaques dans fast_moves et charged_moves indexées par le nom de l'attaque
 function fill_attacks(){
     for (let move of fast_moves.concat(charged_moves)){
         let attack = new Attack(move.move_id, move.name, move.type, move.power, move.duration);
