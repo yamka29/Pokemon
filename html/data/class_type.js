@@ -1,23 +1,45 @@
-import "pokemon_moves.js";
-import "fast_moves.js";
-import "charged_moves.js";
+export class Type {
 
-class Type {
+    static data = type_effectiveness;
+    static all_types = Object.keys(type_effectiveness).map(typeName => new Type(typeName));
+
     constructor(nom) {
         this.nom = nom;
     }
 
     toString() {
 
-        for (let index = 0; index < type_effectiveness.length(); index++) {
-            const element = array[index];
+        if (Type.data[this.nom]) {
+            let groupes = {};
+            var tab = Type.data[this.nom];
+            console.table(tab); 
             
-        }
-
-        console.log(element);
-
-        if (this.nom) {
+            for (let nomType in tab){
+                const value = tab[nomType];
+                console.log("nomType : " + nomType + " value : " + value);
+                
+                if (!groupes[value]) {
+                    groupes[value] = [];
+                }
+                
+                groupes[value].push(nomType);
+            }
             
+            let str = this.nom + " : ";
+
+            for (let value in groupes) {
+                const types = groupes[value];
+                str += value + " = [ " + types.join(", ") + " ]\n";
+            }
+
+            return str;
+        } else {
+            return "Le Type indiqué n'a pas pu etre trouvé";
         }
+    }
+
+    fill_types(nom) {
+        let nType = new Type(nom);
+        Type.all_types.push(nType);
     }
 }
