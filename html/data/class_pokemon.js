@@ -6,7 +6,6 @@
             this.stat_stamina = sta;
             this.stat_attack = atk;
             this.stat_defense = def;
-            this.form = f;
             this.types = this.getTypes();
             this.fast_attacks, this.charged_attacks = this.getAttacks();
         }
@@ -15,7 +14,7 @@
         getTypes() {
             let types = [];
             for(let pokemon_type of pokemon_types){
-                if(pokemon_type.id_pokemon === this.id_pokemon && pokemon_type.form === this.form){
+                if(pokemon_type.id_pokemon === this.id_pokemon && pokemon_type.form === "Normal"){
                     for (let type_name of pokemon_type.type) {
                         types.push(Type.all_types[type_name]); //il faut que all_types soit rempli au préalable
                     }
@@ -30,12 +29,12 @@
             let fast_attacks = [];
             let charged_attacks = [];
             for (let pokemon_move of pokemon_moves){
-                if(pokemon_move.id_pokemon === this.id_pokemon && pokemon_move.form === this.form){
-                    for (let id of pokemon_move.fast_moves.concat(elite_fast_moves || [] )){ //ajoute la liste des attaques élites si y'en a 
+                if(pokemon_move.id_pokemon === this.id_pokemon && pokemon_move.form === "Normal"){
+                    for (let id of pokemon_move.fast_moves){
                         fast_attacks.push(Attack.all_attacks[id]); //il faut avoir rempli all_attacks au préalable
                     }
 
-                    for (let id of pokemon_move.charged_moves.concat(elite_charged_moves || [] )){ //ajoute la liste des attaques élites si y'en a 
+                    for (let id of pokemon_move.charged_moves){ 
                         charged_attacks.push(Attack.all_attacks[id]); //il faut avoir rempli all_attacks au préalable
                     }
                     break;
@@ -53,9 +52,14 @@
 
 //remplit all_pokemons avec tout les Pokemons indexées par leur id et leur forme
 function fill_pokemons(){
-    
+    for (let pokemon of pokemons){
+        let poke = new Pokemon(pokemon.id_pokemon, pokemon.name, pokemon.stat_stamina, pokemon.stat_attack, pokemon.stat_defense);
+        Pokemon.all_pokemons[pokemon.id_pokemon] = poke;
+    }
 }
 
 // TEST
+fill_pokemons;
 let Bulbizarre = new Pokemon(1, "Bulbasaur", 5, 10, 17, "Normal");
 comsole.log(Bulbizarre.toString());
+console.table(all_pokemons);
