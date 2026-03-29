@@ -7,7 +7,7 @@
             this.stat_attack = atk;
             this.stat_defense = def;
             this.types = this.getTypes();
-            this.fast_attacks, this.charged_attacks = this.getAttacks();
+            [this.fast_attacks, this.charged_attacks] = this.getAttacks();
         }
 
         //renvoie la liste des types du pokemon
@@ -40,14 +40,16 @@
                     break;
                 }
             }
-            return fast_attacks, charged_attacks;
+            return [fast_attacks, charged_attacks];
         }
-
-        toString(){
-            return `${this.name} : #${this.id_pokemon}, ${this.types}, [STA: ${this.stat_stamina}, ATK: ${this.stat_attack}, DEF: ${this.stat_defense}], Rapides = ${this.fast_attacks}, Chargées = ${this.charged_attacks}`;
-        }
-
-
+        
+        //renvoie une chaine contenant les infos du pokemons formatées 
+        toString() {
+                const types_str = `[${this.types.map(type => type.nom).join(", ")}]`;
+                const fast_str = `[${this.fast_attacks.map(atk => atk.name).join(", ")}]`;
+                const charged_str = `[${this.charged_attacks.map(atk => atk.name).join(", ")}]`;
+                return `${this.name} : #${this.id_pokemon}, ${types_str}, [STA: ${this.stat_stamina}, ATK: ${this.stat_attack}, DEF: ${this.stat_defense}], Rapides = ${fast_str}, Chargées = ${charged_str}`;
+            }
     }
 
 //remplit all_pokemons avec tout les Pokemons indexées par leur id et leur forme
@@ -59,7 +61,7 @@ function fill_pokemons(){
 }
 
 // TEST
-fill_pokemons;
+fill_pokemons();
 let Bulbizarre = new Pokemon(1, "Bulbasaur", 5, 10, 17, "Normal");
-comsole.log(Bulbizarre.toString());
-console.table(all_pokemons);
+console.log(Bulbizarre.toString());
+console.table(Pokemon.all_pokemons);

@@ -1,4 +1,4 @@
-export class Type {
+class Type {
 
     // Données statiques contenant les informations sur l'efficacité des types
     static data = type_effectiveness;

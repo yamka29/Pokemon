@@ -1,5 +1,3 @@
-import { Type } from './class_type.js';
-
 console.log(window.typesData);
 
 function testType() {
