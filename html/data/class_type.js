@@ -3,8 +3,8 @@ class Type {
     static all_types = {};
 
     constructor(n) {
-        this.nom = n;
-        this.efficiency = type_effectiveness[nom];
+        this.name = n;
+        this.efficiency = type_effectiveness[n];
     }
 
     //retourne l'efficacité de ce type d'attaque contre le type fourni en paramètre
@@ -27,7 +27,7 @@ class Type {
         }
 
         //trie les groupes par ordre décroissant
-        const sorted_groups = Object.keys(groups).map(Number).sort((a, b) => a - b); 
+        const sorted_groups = Object.keys(groups).map(Number).sort((a, b) => b - a); 
 
         //construit la chaine puis la renvoie
         const defending_type = sorted_groups.map(effic => {
@@ -35,17 +35,15 @@ class Type {
             return `${effic} = [${types.join(", ")}]`;
         })
 
-        return `${this.name} : ${sorted_groups.join(", ")}`;
+        return `${this.name} : ${defending_type.join(", ")}`;
     }
 
 
 
-    /**
-     * Ajoute un nouveau type à la liste statique all_types
-     * @param {string} nom - Le nom du type Pokémon à ajouter
-     */
-    fill_types(nom) {
-        let nType = new Type(nom);
-        Type.all_types.push(nType);
+}
+//remplit all_types avec tout les types dans type_effectiveness indeés par leur nom
+function fill_types() {
+    for (const name in type_effectiveness){
+        Type.all_types[name] = new Type(name);
     }
 }

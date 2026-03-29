@@ -1,5 +1,6 @@
 class Attack{
     static all_attacks = {};
+
     constructor(id, n, t, p, d){
         this.id_attack = id;
         this.name = n;
@@ -12,6 +13,7 @@ class Attack{
        return `${this.name} : #${this.id_attack}, ${this.type}, ${this.power}, ${this.duration}ms` 
     }
 
+    
 
 }
 
@@ -25,10 +27,9 @@ function fill_attacks(){
 
 
 // TEST
-fill_attacks();
-let Charge = new Attack(12, "Tackle", "Normal", 5, 50);
-console.table(fast_moves);
-console.table(charged_moves);
-console.table(Object.values(Attack.all_attacks));   
-console.log(Attack.all_attacks[221].toString());
-console.log(Attack.all_attacks[222].toString());
+// fill_attacks();
+// let Charge = new Attack(12, "Tackle", "Normal", 5, 50);
+// console.table(fast_moves);
+// console.table(charged_moves);
+// console.table(Object.values(Attack.all_attacks));   
+// console.log(Attack.all_attacks[222].toString());
