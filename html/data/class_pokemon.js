@@ -1,5 +1,6 @@
     class Pokemon{
         static all_pokemons = {};
+        
         constructor(id, n, atk, def, sta, f){
             this.id_pokemon = id;
             this.name = n;
@@ -42,7 +43,7 @@
             }
             return [fast_attacks, charged_attacks];
         }
-        
+
         //renvoie une chaine contenant les infos du pokemons formatées 
         toString() {
                 const types_str = `[${this.types.map(type => type.nom).join(", ")}]`;

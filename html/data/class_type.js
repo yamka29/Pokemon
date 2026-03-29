@@ -1,49 +1,44 @@
 class Type {
 
-    // Données statiques contenant les informations sur l'efficacité des types
-    static data = type_effectiveness;
+    static all_types = {};
+
+    constructor(n) {
+        this.nom = n;
+        this.efficiency = type_effectiveness[nom];
+    }
+
+    //retourne l'efficacité de ce type d'attaque contre le type fourni en paramètre
+    getEfficiency(defenderType){
+        return this.efficiency[defenderType];
+    }
     
-    // Tableau statique contenant toutes les instances de Type
-    static all_types = Object.keys(type_effectiveness).map(typeName => new Type(typeName));
+    //renvoie une chaine contenant le nom du type et son efficacité face à chaque autre type
+    toString(){
+        const groups = {};
 
-    constructor(nom) {
-        this.nom = nom;
-    }
-
-    toString() {
-
-        if (Type.data[this.nom]) {
-            let groupes = {};
-            var tab = Type.data[this.nom];
-            console.table(tab); 
-            
-            // Parcourir les données d'efficacité et grouper les types par valeur
-            for (let nomType in tab){
-                const value = tab[nomType];
-                console.log("nomType : " + nomType + " value : " + value);
-                
-                // Créer une clé dans groupes si elle n'existe pas
-                if (!groupes[value]) {
-                    groupes[value] = [];
-                }
-                
-                // Ajouter le type au groupe correspondant
-                groupes[value].push(nomType);
-            }
-            
-            // Construire la chaîne de résultat
-            let str = this.nom + " : ";
-
-            for (let value in groupes) {
-                const types = groupes[value];
-                str += value + " = [ " + types.join(", ") + " ]\n";
+        //groupe les types par leur efficacité 
+        for (const name in this.efficiency){
+            const effic = this.efficiency[name];
+            if (!groups[effic]){
+                groups[effic] = [];
             }
 
-            return str;
-        } else {
-            return "Le Type indiqué n'a pas pu etre trouvé";
+            groups[effic].push(name);
         }
+
+        //trie les groupes par ordre décroissant
+        const sorted_groups = Object.keys(groups).map(Number).sort((a, b) => a - b); 
+
+        //construit la chaine puis la renvoie
+        const defending_type = sorted_groups.map(effic => {
+            const types = groups[effic];
+            return `${effic} = [${types.join(", ")}]`;
+        })
+
+        return `${this.name} : ${sorted_groups.join(", ")}`;
     }
+
+
 
     /**
      * Ajoute un nouveau type à la liste statique all_types
