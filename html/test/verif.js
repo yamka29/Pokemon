@@ -13,3 +13,8 @@ console.log("-------------------");
 console.log("Type Bug");
 console.log(Type.all_types['Bug'].toString());
 console.log("-------------------");
+console.log("Attaques de type water");
+console.log(getAttacksByType('Water'));
+console.log("-------------------");
+console.log("liste des pokemns trié par types et noms");
+console.log(sortPokemonsByTypeThenName());

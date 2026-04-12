@@ -10,7 +10,7 @@ class Attack{
     }
 
     toString(){
-       return `${this.name} : #${this.id_attack}, ${this.type}, ${this.power}, ${this.duration}ms` 
+        return `${this.name} : #${this.id_attack}, ${this.type}, ${this.power}, ${this.duration}ms` 
     }
 
     
