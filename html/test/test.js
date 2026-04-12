@@ -26,19 +26,74 @@ function getPokemonsByType(typeName){
 }
 // Fonction affichant la liste des pokémons possédant l'attaque en paramètre
 function getPokemonsByAttack(attackName){
-    let pokemonWithThisAttack = Object.values(Pokemon.all_pokemons).filter(
+    let pokemonsWithThisAttack = Object.values(Pokemon.all_pokemons).filter(
         pokemon => pokemon.fast_attacks.concat(pokemon.charged_attacks).some(
             attack => attack.name.toLowerCase() === attackName.toLowerCase()
         )
-    )
+    );
 
-    return displayList(pokemonWithThisAttack, "Pokémons");
+    return displayList(pokemonsWithThisAttack, "Pokémons");
 }
 
 console.log("-------------------");
 console.log("Pokemons with the move Razor Leaf");
 console.log(getPokemonsByAttack('Razor Leaf'))
 console.log("-------------------");
+
+//Fonction affichant la liste des attaques pour un type donné en argument
+function getAttacksByType(typeName){
+    let attacksWithThisType = Object.values(Attack.all_attacks).filter(
+        attack => attack.type.toLowerCase() === typeName.toLowerCase()
+    );
+
+    return displayList(attacksWithThisType, "Attaques");
+} 
+
+console.log("-------------------");
+console.log("Attacks with the type Ghost");
+console.log(getAttacksByType('Ghost'))
+console.log("-------------------");
+
 // console.log(Attack.all_attacks[221].toString());
 // console.log(Type.all_types["Bug"].toString());
 // console.log(Pokemon.all_pokemons[1].toString());
+
+//Fonction affichant la liste des Pokemons triés par type puis par ordre alphabétique
+function sortPokemonsByTypeThenName(){
+    let pokemons = Object.values(Pokemon.all_pokemons);
+    
+    pokemons.sort((a, b) => {
+        // Obtenir les types triés alphabétiquement pour chaque Pokémon
+        let typesA = a.types.map(type => type.name.toLowerCase()).sort();
+        let typesB = b.types.map(type => type.name.toLowerCase()).sort();
+        
+        // Comparer les types : joindre les noms en chaîne et comparer
+        let typeStrA = typesA.join(',');
+        let typeStrB = typesB.join(',');
+        
+        if (typeStrA < typeStrB) return -1;
+        if (typeStrA > typeStrB) return 1;
+        
+        // Si les types sont identiques, comparer par nom
+        if (a.name < b.name) return -1;
+        if (a.name > b.name) return 1;
+        return 0;
+    });
+    
+    // Trier les types de chaque Pokémon en ordre alphabétique pour l'affichage (sans ça les pokemons s'affichent correctement triés mais dans leur ordre de type d'origine)
+    for (let pokemon of pokemons) {
+        pokemon.types.sort((type1, type2) => {
+            if (type1.name < type2.name) return -1;
+            if (type1.name > type2.name) return 1;
+            return 0;
+        });
+    }
+    
+    return displayList(pokemons, "Pokémons");
+}
+
+console.log("-------------------");
+console.log("All the pokemons sorted by type and name");
+console.log(sortPokemonsByTypeThenName())
+console.log("-------------------");
+
