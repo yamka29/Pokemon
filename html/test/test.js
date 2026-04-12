@@ -35,6 +35,27 @@ function getPokemonsByAttack(attackName){
     return displayList(pokemonWithThisAttack, "Pokémons");
 }
 
+function getAttacksByType(typeName){
+    let attacksOfType = Object.values(Attack.all_attacks).filter(
+        attack => attack.type.toLowerCase() === typeName.toLowerCase()
+    )
+    return displayList(attacksOfType, "Attaques");
+}
+
+function sortPokemonsByTypeThenName() {
+    let pokemons = Object.values(Pokemon.all_pokemons);
+    pokemons.sort((a, b) => {
+        // Compare les types
+        if (a.types[0].name < b.types[0].name) return -1;
+        if (a.types[0].name > b.types[0].name) return 1;
+        // Si les types sont égaux, compare les noms
+        if (a.name < b.name) return -1;
+        if (a.name > b.name) return 1;
+        return 0; // Si les types et les noms sont égaux
+    })
+    return pokemons;
+}
+
 console.log("-------------------");
 console.log("Pokemons with the move Razor Leaf");
 console.log(getPokemonsByAttack('Razor Leaf'))
