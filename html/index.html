@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pokémon</title>
+    <link rel="stylesheet" href="style.css">
     
     <script src="js/jquery3.7.1.js"></script>
     
@@ -43,12 +44,32 @@
             </tbody>
         </table>
         
-        <!-- Navigation et pagination -->
+        <!-- Navigation entre les pages -->
         <div class="pagination">
-            <button id="prev-btn" class="nav-btn">PREC</button>
+            <button id="btn-prec" class="nav-btn">PREC</button>
             <span id="page-info">Page 1 sur 0</span>
-            <button id="next-btn" class="nav-btn">SUIV</button>
+            <button id="btn-suiv" class="nav-btn">SUIV</button>
         </div>
     </main>
+    
+    <!-- Popup pour afficher les détails du Pokémon -->
+    <div id="modal-details" class="modal" style="display: none;">
+        <div class="modal-content">
+            <button id="close-btn" class="close-btn">X</button>
+            <h2 id="modal-title">Détails du Pokémon</h2>
+            <div id="modal-body">
+                <p id="modal-info"></p>
+                <h3>Attaques rapides</h3>
+                <ul id="fast-attacks-list"></ul>
+                <h3>Attaques chargées</h3>
+                <ul id="charged-attacks-list"></ul>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Image agrandie en survol -->
+    <div id="image-popup" class="image-popup" style="display: none;">
+        <img id="bigger-image" src="" alt="Pokémon">
+    </div>
 </body>
 </html>
