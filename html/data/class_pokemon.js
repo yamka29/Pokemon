@@ -75,7 +75,7 @@ class Pokemon{
             //Erreur si l'attaque n'existe pas
             if (!attack) {
                 console.log(`L'attaque "${attackName}" n'as pas été trouvée`);
-                return;
+                return null;
             }
             
             // on récupère le type de l'attaque
@@ -111,9 +111,10 @@ class Pokemon{
             }
         }
 
-        //méthode retournant la meilleure attack contre un pokémon donné en paramètre, si print vaut true, la liste des attaques possibles et leur dégat contre l'ennemi est affichée
+        //méthode retournant la meilleure attack contre un pokémon donné en paramètre, 
+        // si print vaut true, la liste des attaques possibles et leur dégat contre l'ennemi est affichée
         getBestFastAttacksForEnemy(print, pokemonName){
-            // Trouver le Pokémon défenseur par son nom
+            // On cherche le pokémon défenseur par son nom
             let enemy = null;
             for (let pokemon of Object.values(Pokemon.all_pokemons)) {
                 if (pokemon.name === pokemonName) {
@@ -122,14 +123,14 @@ class Pokemon{
                 }
             }
             
-            // Vérifier si le Pokémon défenseur existe
+            // Erreur si le pokémon n'existe pas
             if (!enemy) {
                 console.log(`Le Pokémon "${pokemonName}" n'a pas été trouvé`);
                 return null;
             }
             
-            // Calculer les dégâts pour chaque attaque rapide
-            let attacksData = [];
+            // on calcule les dégâts pour chaque attaque rapide
+            let attacksDamage = [];
             for (let attack of this.fast_attacks) {
                 // Calculer l'efficacité contre chaque type du défenseur
                 let totalEffectiveness = 1;
@@ -138,42 +139,42 @@ class Pokemon{
                     totalEffectiveness = totalEffectiveness * eff;
                 }
                 
-                // Calculer les dégâts : Power * effectiveness * (Base attack / Base defense)
+                // on calcule les dégats d'après la formule : Power * effectiveness * (Base attack A / Base defense B)
                 let damage = attack.power * totalEffectiveness * (this.stat_attack / enemy.stat_defense);
                 
-                attacksData.push({
+                attacksDamage.push({
                     attack: attack,
                     damage: damage,
                     effectiveness: totalEffectiveness
                 });
             }
             
-            // Afficher la liste si print est true
+            // si print est true, on affiche la liste 
             if (print) {
                 console.log(`Attaques rapides de ${this.name} contre ${enemy.name}:`);
-                for (let data of attacksData) {
-                    console.log(`- ${data.attack.toString()} | Dégâts: ${data.damage.toFixed(2)} | Efficacité: ${data.effectiveness.toFixed(2)}`);
+                for (let attack of attacksDamage) {
+                    console.log(`- ${attack.attack.toString()},  Dégâts: ${attack.damage.toFixed(2)}, Efficacité: ${attack.effectiveness.toFixed(2)}`);
                 }
             }
             
-            // Trouver la meilleure attaque (plus hauts dégâts, ou première alphabétiquement en cas d'égalité)
-            let bestAttackData = attacksData[0];
-            for (let data of attacksData) {
-                if (data.damage > bestAttackData.damage) {
-                    bestAttackData = data;
-                } else if (data.damage === bestAttackData.damage) {
-                    // En cas d'égalité, prendre la première alphabétiquement
-                    if (data.attack.name < bestAttackData.attack.name) {
-                        bestAttackData = data;
+            // on trouve la meilleure attaque: celle avec les plus gros dégâts et la première alphabétiquement si égalité
+            let bestAttackDamage = attacksDamage[0];
+            for (let damage of attacksDamage) {
+                if (damage.damage > bestAttackDamage.damage) {
+                    bestAttackDamage = damage;
+                } else if (damage.damage === bestAttackDamage.damage) {
+                    // si égalité, prendre la première alphabétiquement
+                    if (damage.attack.name < bestAttackDamage.attack.name) {
+                        bestAttackDamage = damage;
                     }
                 }
             }
             
-            // Retourner l'objet littéral avec les informations requises
+            // Retourner l'objet littéral avec l'attaque, les dégats et l'efficacité
             return {
-                atk: bestAttackData.attack,
-                pts: bestAttackData.damage,
-                eff: bestAttackData.effectiveness
+                atk: bestAttackDamage.attack,
+                pts: bestAttackDamage.damage,
+                eff: bestAttackDamage.effectiveness
             };
         }
     }
