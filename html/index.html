@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokémon</title>
+    
+    <script src="js/jquery3.7.1.js"></script>
+    
+    
+    <script src="data/type_effectiveness.js"></script>
+    <script src="data/pokemons.js"></script>
+    <script src="data/pokemon_types.js"></script>
+    <script src="data/fast_moves.js"></script>
+    <script src="data/charged_moves.js"></script>
+    <script src="data/pokemon_moves.js"></script>
+    
+    
+    <script src="data/class_type.js"></script>
+    <script src="data/class_attack.js"></script>
+    <script src="data/class_pokemon.js"></script>
+    
+   
+    <script src="js/script.js"></script> 
+</head>
+<body>
+    <main>
+        <h1>Tout les Pokémons</h1>
+        <h2>Toutes les infos sur tout les Pokémons existants !</h2>
+        
+        <table>
+            <thead>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Type(s)</th>
+                <th>PV</th>
+                <th>ATK</th>
+                <th>DEF</th>
+                <th>Image</th>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+        
+        <!-- Navigation et pagination -->
+        <div class="pagination">
+            <button id="prev-btn" class="nav-btn">PREC</button>
+            <span id="page-info">Page 1 sur 0</span>
+            <button id="next-btn" class="nav-btn">SUIV</button>
+        </div>
+    </main>
+</body>
+</html>
