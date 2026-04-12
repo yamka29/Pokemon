@@ -97,3 +97,22 @@ console.log("All the pokemons sorted by type and name");
 console.log(sortPokemonsByTypeThenName())
 console.log("-------------------");
 
+// Test de la méthode de classe getWeakestEnemies
+console.log("-------------------");
+console.log("Test de getWeakestEnemies \n");
+console.log("-------------------");
+
+// Test 1 : Attaque "Tackle" (type Normal)
+console.log("Test 1 - Attaque Tackle (type Normal):\n");
+Pokemon.getWeakestEnemies("Tackle");
+
+// Test 2 : Attaque "Razor Leaf" (type Grass)
+console.log("Test 2 - Attaque Razor Leaf (type Grass):\n");
+Pokemon.getWeakestEnemies("Razor Leaf");
+
+// Test 3 : Attaque non existante
+console.log("Test 3 - Attaque inexistante:\n");
+Pokemon.getWeakestEnemies("Skibidi67");
+
+console.log("-------------------");
+

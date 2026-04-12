@@ -1,4 +1,4 @@
-    class Pokemon{
+class Pokemon{
         static all_pokemons = {};
         
         constructor(id, n, atk, def, sta){
@@ -62,9 +62,9 @@
                 return `${this.name} : #${this.id_pokemon}, ${types_str}, [STA: ${this.stat_stamina}, ATK: ${this.stat_attack}, DEF: ${this.stat_defense}], Rapides = ${fast_str}, Chargées = ${charged_str}`;
             }
 
-        //méthode de classe affichant la liste des pokémons pour lesquels l'attaque choisie est la plus efficace
+        //méthode de classe qui affiche la liste des pokemons pour lesquels l'attaque choisie est la plus efficace
         static getWeakestEnemies(attackName){
-            // Trouver l'attaque par son nom
+            // on cherche l'attaque par son nom
             let attack = null;
             for (let id in Attack.all_attacks) {
                 if (Attack.all_attacks[id].name === attackName) {
@@ -72,38 +72,109 @@
                     break;
                 }
             }
-            
+            //Erreur si l'attaque n'existe pas
             if (!attack) {
-                console.log(`Attaque "${attackName}" non trouvée`);
+                console.log(`L'attaque "${attackName}" n'as pas été trouvée`);
                 return;
             }
             
-            // Obtenir le type de l'attaque
+            // on récupère le type de l'attaque
             let attackType = Type.all_types[attack.type];
             
-            // Calculer l'efficacité pour chaque pokémon
+            // On calcule l'efficacité de l'attaque contre chaque Pokémon
             let pokemonEffectiveness = [];
             for (let pokemon of Object.values(Pokemon.all_pokemons)) {
-                // Multiplier l'efficacité contre chaque type du pokémon
+                // On multiplie l'efficacité de tout les types du pokemon (1 ou 2 logiquement)
                 let totalEffectiveness = 1;
                 for (let defenderType of pokemon.types) {
                     let eff = attackType.getEfficiency(defenderType.name);
-                    totalEffectiveness *= eff;
+                    totalEffectiveness = totalEffectiveness * eff;
                 }
                 pokemonEffectiveness.push({ pokemon: pokemon, effectiveness: totalEffectiveness });
             }
             
-            // Trouver l'efficacité maximale
-            let maxEffectiveness = Math.max(...pokemonEffectiveness.map(p => p.effectiveness));
+            // On cherche la meilleure efficacité
+            let bestEffectiveness = 0;
+            for (let p of pokemonEffectiveness) {
+                if (p.effectiveness > bestEffectiveness) {
+                    bestEffectiveness = p.effectiveness;
+                }
+            }
             
-            // Filtrer les pokémons avec l'efficacité maximale
-            let weakestEnemies = pokemonEffectiveness.filter(p => p.effectiveness === maxEffectiveness).map(p => p.pokemon);
+            // on filtre les pokémons avec l'efficacité maximale
+            let weakestEnemies = pokemonEffectiveness.filter(p => p.effectiveness === bestEffectiveness).map(p => p.pokemon);
             
-            // Afficher la liste
-            console.log(`Pokémons les plus faibles contre l'attaque "${attackName}" (efficacité: ${maxEffectiveness}):`);
+            //on affiche la liste dans la console
+            console.log(`Les pokémons les plus faibles contre l'attaque "${attackName}" (efficacité: ${bestEffectiveness.toFixed(2)}):`);
             for (let pokemon of weakestEnemies) {
                 console.log(`- ${pokemon.toString()}`);
             }
+        }
+
+        //méthode retournant la meilleure attack contre un pokémon donné en paramètre, si print vaut true, la liste des attaques possibles et leur dégat contre l'ennemi est affichée
+        getBestFastAttacksForEnemy(print, pokemonName){
+            // Trouver le Pokémon défenseur par son nom
+            let enemy = null;
+            for (let pokemon of Object.values(Pokemon.all_pokemons)) {
+                if (pokemon.name === pokemonName) {
+                    enemy = pokemon;
+                    break;
+                }
+            }
+            
+            // Vérifier si le Pokémon défenseur existe
+            if (!enemy) {
+                console.log(`Le Pokémon "${pokemonName}" n'a pas été trouvé`);
+                return null;
+            }
+            
+            // Calculer les dégâts pour chaque attaque rapide
+            let attacksData = [];
+            for (let attack of this.fast_attacks) {
+                // Calculer l'efficacité contre chaque type du défenseur
+                let totalEffectiveness = 1;
+                for (let defenderType of enemy.types) {
+                    let eff = Type.all_types[attack.type].getEfficiency(defenderType.name);
+                    totalEffectiveness = totalEffectiveness * eff;
+                }
+                
+                // Calculer les dégâts : Power * effectiveness * (Base attack / Base defense)
+                let damage = attack.power * totalEffectiveness * (this.stat_attack / enemy.stat_defense);
+                
+                attacksData.push({
+                    attack: attack,
+                    damage: damage,
+                    effectiveness: totalEffectiveness
+                });
+            }
+            
+            // Afficher la liste si print est true
+            if (print) {
+                console.log(`Attaques rapides de ${this.name} contre ${enemy.name}:`);
+                for (let data of attacksData) {
+                    console.log(`- ${data.attack.toString()} | Dégâts: ${data.damage.toFixed(2)} | Efficacité: ${data.effectiveness.toFixed(2)}`);
+                }
+            }
+            
+            // Trouver la meilleure attaque (plus hauts dégâts, ou première alphabétiquement en cas d'égalité)
+            let bestAttackData = attacksData[0];
+            for (let data of attacksData) {
+                if (data.damage > bestAttackData.damage) {
+                    bestAttackData = data;
+                } else if (data.damage === bestAttackData.damage) {
+                    // En cas d'égalité, prendre la première alphabétiquement
+                    if (data.attack.name < bestAttackData.attack.name) {
+                        bestAttackData = data;
+                    }
+                }
+            }
+            
+            // Retourner l'objet littéral avec les informations requises
+            return {
+                atk: bestAttackData.attack,
+                pts: bestAttackData.damage,
+                eff: bestAttackData.effectiveness
+            };
         }
     }
 
