@@ -25,18 +25,39 @@
     <script src="js/script.js"></script> 
 </head>
 <body>
+    <!-- Header contenant les filtres -->
+    <header class="header">
+
+        <div class="filters">
+            <label for="type-filter">Filtrer par type :</label>
+            <select id="type-filter">
+                <option value="">-- Tous les types --</option>
+                
+            </select>
+            
+            <label for="fast-attack-filter">Filtrer par attaque rapide :</label>
+            <select id="fast-attack-filter">
+                <option value="">-- Toutes les attaques --</option>
+                
+            </select>
+            
+            <label for="name-filter">Filtrer par nom :</label>
+            <input type="text" id="name-filter" placeholder="Rechercher un Pokémon...">
+        </div>
+    </header>
+    
     <main>
         <h1>Tout les Pokémons</h1>
         <h2>Toutes les infos sur tout les Pokémons existants !</h2>
         
         <table>
             <thead>
-                <th>ID</th>
-                <th>Nom</th>
-                <th>Type(s)</th>
-                <th>PV</th>
-                <th>ATK</th>
-                <th>DEF</th>
+                <th class="sortable" data-sort="id">ID</th>
+                <th class="sortable" data-sort="name">Nom</th>
+                <th class="sortable" data-sort="type">Type(s)</th>
+                <th class="sortable" data-sort="stamina">PV</th>
+                <th class="sortable" data-sort="attack">ATK</th>
+                <th class="sortable" data-sort="defense">DEF</th>
                 <th>Image</th>
             </thead>
             <tbody>

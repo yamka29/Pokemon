@@ -2,8 +2,48 @@
 body{
     color: white;
     background-color: #555;
-    font-family:Verdana, Geneva, Tahoma, sans-serif
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    margin: 0;
 }
+
+/* Style du header avec les filtres */
+.header {
+    background-color: #333;
+    padding: 15px;
+    margin: 0;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.filters {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+.filters label {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.filters > select, .filters > input {
+    padding: 8px 15px;
+    border-radius: 10px 0 10px 0;
+    border: none;
+    background-color: #fff;
+    color: #333;
+    font-weight: bold;
+    cursor: pointer;    
+    min-width: 200px;
+}
+
+#type-filter:hover {
+    background-color: #f0f0f0;
+}
+
 main{
     margin: 20px 10%;
 }
@@ -20,6 +60,29 @@ th, td{
     padding: 10px 5px;
 
 }
+
+button{
+    background-color: #ff4444;
+    border: none;
+    border-radius: 10px 0 10px 0;
+    padding: 5px 10px;
+    color: #fff;    
+    font-weight: bold;    
+}
+
+/* Style du tri */
+th.sortable {
+    cursor: pointer;
+}
+
+th.sortable:hover {
+    background-color: #dd3333;
+}
+
+th.active {
+    font-weight: bold;
+}
+
 
 
 /* Styles pour la modale des détails */

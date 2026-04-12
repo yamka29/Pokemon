@@ -11,9 +11,35 @@ $(document).ready(function() {
     const POKEMON_BY_PAGE = 25;
     let currentPage = 1;
     
-    // Récupérer tous les Pokémons dans un tableau
+    // on récupère tous les Pokémons dans un tableau
     let listPokemons = Object.values(Pokemon.all_pokemons);
-    let totalPages = Math.ceil(listPokemons.length / POKEMON_BY_PAGE);
+    let filteredPokemons = listPokemons; // liste filtrée (par défaut tout les pokémons)
+    let totalPages = Math.ceil(filteredPokemons.length / POKEMON_BY_PAGE);
+    
+    // variables pour le tri
+    let sortColumn = null;
+    let sortAscending = true;
+    
+    // on remplit le select avec les types disponibles
+    let typesList = Object.values(Type.all_types).map(type => type.name).sort();
+    //puis les ajoute dans le select
+    for (let type of typesList) {
+        $("#type-filter").append(`<option value="${type}">${type}</option>`);
+    }
+    
+    // on remplit le select avec les attaques rapides disponibles
+    let fastAttacksList = [];
+    for (let pokemon of listPokemons) {
+        for (let attack of pokemon.fast_attacks) {
+            if (!fastAttacksList.includes(attack.name)) {
+                fastAttacksList.push(attack.name);
+            }
+        }
+    }
+    fastAttacksList.sort();
+    for (let attack of fastAttacksList) {
+        $("#fast-attack-filter").append(`<option value="${attack}">${attack}</option>`);
+    }
     
     // Fonction pour afficher une page
     function displayPage(pageNumber) {
@@ -21,8 +47,8 @@ $(document).ready(function() {
         let start = (pageNumber - 1) * POKEMON_BY_PAGE;
         let end = start + POKEMON_BY_PAGE;
         
-        // on récupère les Pokémons pour cette page
-        let pagePokemon = listPokemons.slice(start, end);
+        // on récupère les Pokémons pour cette page 
+        let pagePokemon = filteredPokemons.slice(start, end);
         
         // on vide le tableau de son ancien contenu
         $("tbody").empty();
@@ -138,33 +164,166 @@ $(document).ready(function() {
             chargedAttacksList.append(`<li>${attack.name} (${attack.type}) - Puissance: ${attack.power}</li>`);
         }
         
-        // Afficher la modal
+        // Afficher la popup
         $("#modal-details").show();
     }
     
-    // Événement du bouton fermer la modal
+    // événement du bouton fermer la popup
     $("#close-btn").click(function() {
         $("#modal-details").hide();
     });
     
-    // Fermer la modal en cliquant en dehors du contenu
+    // fermer la popup en cliquant en dehors du contenu
     $("#modal-details").click(function(e) {
         if (e.target.id === "modal-details") {
             $("#modal-details").hide();
         }
     });
     
-    // On affiche la première page par défaut
+    // événement du filtre par type
+    $("#type-filter").change(function() {
+        applyFilters();
+    });
+    
+    // événement du filtre par attaque rapide
+    $("#fast-attack-filter").change(function() {
+        applyFilters();
+    });
+    
+    // événement du filtre par nom
+    $("#name-filter").on("input", function() {
+        applyFilters();
+    });
+    
+    // Fonction pour normaliser les caractères qui renvoie la même chainesans accent et sans majuscule
+    function normalizeString(str) {
+        return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase(); 
+        //normalize(NFD) permet de décomposer les caractères accentués
+        //et le replace() les supprime
+    }
+    
+    // Fonction pour trier les Pokémons
+    function sortPokemons(column) {
+        // si on clique sur la même colonne, on inverse l'ordre alphabétique du tri
+        if (sortColumn === column) {
+            sortAscending = !sortAscending;
+        } else {
+            sortColumn = column;
+            sortAscending = true;
+        }
+        
+        applySortToFilteredList();
+    }
+    
+    // Fonction pour appliquer le tri courant à filteredPokemons
+    function applySortToFilteredList() {
+        if (sortColumn === null) return;
+        
+        // Tri
+        filteredPokemons.sort(function(a, b) {
+            let a_val, b_val;
+            
+            switch(sortColumn) {
+                case 'id':
+                    a_val = a.id_pokemon;
+                    b_val = b.id_pokemon;
+                    break;
+                case 'name':
+                    a_val = a.name;
+                    b_val = b.name;
+                    break;
+                case 'type':
+                    a_val = a.types.map(t => t.name).join(", ");
+                    b_val = b.types.map(t => t.name).join(", ");
+                    break;
+                case 'stamina':
+                    a_val = a.stat_stamina;
+                    b_val = b.stat_stamina;
+                    break;
+                case 'attack':
+                    a_val = a.stat_attack;
+                    b_val = b.stat_attack;
+                    break;
+                case 'defense':
+                    a_val = a.stat_defense;
+                    b_val = b.stat_defense;
+                    break;
+            }
+            
+            // Comparaison
+            let comparison = 0;
+            if (typeof a_val === 'string') {
+                comparison = a_val.localeCompare(b_val);
+            } else {
+                comparison = a_val - b_val;
+            }
+            
+            // si égalité alors on trie par nom
+            if (comparison === 0) {
+                comparison = a.name.localeCompare(b.name);
+            }
+            
+            // on applique l'ordre croissant ou décroissant
+            return sortAscending ? comparison : -comparison;
+        });
+        
+        // on met à jour le style des entetes sélectionnés ou non
+        $("th.sortable").removeClass("active");
+        $(`th[data-sort="${sortColumn}"]`).addClass("active");
+        
+        // on recalcule le nombre total de pages
+        totalPages = Math.ceil(filteredPokemons.length / POKEMON_BY_PAGE);
+        
+        // on met  à jour l'affichage
+        currentPage = 1;
+        displayPage(1);
+    }
+    
+    // événement sur les entetes de tri
+    $("th.sortable").click(function() {
+        let column = $(this).data("sort");
+        sortPokemons(column);
+    });
+    
+    // Fonction pour appliquer les filtres simultanément
+    function applyFilters() {
+        let selectedType = $("#type-filter").val();
+        let selectedAttack = $("#fast-attack-filter").val();
+        let searchName = $("#name-filter").val();
+        let normalizedName = normalizeString(searchName);
+        
+        filteredPokemons = listPokemons.filter(function(pokemon) {
+            let hasType = selectedType === "" || pokemon.types.some(type => type.name === selectedType);
+            let hasAttack = selectedAttack === "" || pokemon.fast_attacks.some(attack => attack.name === selectedAttack);
+            let hasName = normalizedName === "" || normalizeString(pokemon.name).includes(normalizedName);
+            
+            return hasType && hasAttack && hasName;
+        });
+        
+        // Réappliquer le tri s'il y en a un d'actif
+        if (sortColumn !== null) {
+            applySortToFilteredList();
+        } else {
+            // on recalcule le nombre total de pages
+            totalPages = Math.ceil(filteredPokemons.length / POKEMON_BY_PAGE);
+            
+            // on redirige a la page 1
+            currentPage = 1;
+            displayPage(1);
+        }
+    }
+    
+    // on affiche la première page par défaut
     displayPage(1);
     
-    // Événement du bouton PREC
+    // événement du bouton PREC
     $("#btn-prec").click(function() {
         if (currentPage > 1) {
             displayPage(currentPage - 1);
         }
     });
     
-    // Événement du bouton SUIV
+    // événement du bouton SUIV
     $("#btn-suiv").click(function() {
         if (currentPage < totalPages) {
             displayPage(currentPage + 1);
